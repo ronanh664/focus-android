@@ -10,15 +10,14 @@ import android.os.Bundle
 import androidx.appcompat.widget.Toolbar
 import android.util.AttributeSet
 import android.view.View
+import mozilla.components.concept.engine.EngineView
 
 import org.mozilla.focus.R
 import org.mozilla.focus.browser.LocalizedContent
+import org.mozilla.focus.ext.components
 import org.mozilla.focus.fragment.InfoFragment
 import org.mozilla.focus.locale.LocaleAwareAppCompatActivity
 import org.mozilla.focus.locale.Locales
-import org.mozilla.focus.web.ClassicWebViewProvider
-import org.mozilla.focus.web.IWebView
-import org.mozilla.focus.web.WebViewProvider
 
 /**
  * A generic activity that supports showing additional information in a WebView. This is useful
@@ -44,8 +43,12 @@ class InfoActivity : LocaleAwareAppCompatActivity() {
     }
 
     override fun onCreateView(name: String, context: Context, attrs: AttributeSet): View? {
-        if (name == IWebView::class.java.name) {
+        if (name == EngineView::class.java.name) {
             // We use a WebView for focus:rights as a workaround to link to other internal pages
+
+
+            // TODO: Figure out internal linking.
+            /*
             val view = if (url in listOf(LocalizedContent.URL_RIGHTS, LocalizedContent.URL_ABOUT)) {
                 ClassicWebViewProvider().create(context, attrs)
             } else {
@@ -55,6 +58,9 @@ class InfoActivity : LocaleAwareAppCompatActivity() {
             val webView = view as IWebView
             webView.setBlockingEnabled(false)
             return view
+             */
+
+            return components.engine.createView(context, attrs).asView()
         }
         return super.onCreateView(name, context, attrs)
     }

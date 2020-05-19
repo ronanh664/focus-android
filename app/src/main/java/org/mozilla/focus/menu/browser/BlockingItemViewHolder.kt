@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import mozilla.components.support.utils.ThreadUtils
 import org.mozilla.focus.R
 import org.mozilla.focus.exceptions.ExceptionDomains
+import org.mozilla.focus.ext.components
 import org.mozilla.focus.fragment.BrowserFragment
 import org.mozilla.focus.telemetry.TelemetryWrapper
 import java.net.MalformedURLException
@@ -80,7 +81,7 @@ internal class BlockingItemViewHolder(itemView: View, private val fragment: Brow
         ThreadUtils.postToMainThreadDelayed(Runnable {
             menu.dismiss()
 
-            fragment.reload()
+            buttonView.context.components.sessionUseCases.reload(fragment.session)
         }, Switch_THUMB_ANIMATION_DURATION)
     }
 

@@ -12,10 +12,7 @@ import org.mozilla.focus.R
 import org.mozilla.focus.activity.InfoActivity
 import org.mozilla.focus.ext.components
 import org.mozilla.focus.telemetry.TelemetryWrapper
-import org.mozilla.focus.utils.AppConstants
-import org.mozilla.focus.utils.SupportUtils
-import org.mozilla.focus.utils.homeScreenTipsExperimentDescriptor
-import org.mozilla.focus.utils.isInExperiment
+import org.mozilla.focus.utils.*
 
 class MozillaSettingsFragment : BaseSettingsFragment(),
     SharedPreferences.OnSharedPreferenceChangeListener {
@@ -55,7 +52,7 @@ class MozillaSettingsFragment : BaseSettingsFragment(),
                 startActivity(intent)
             }
             resources.getString(R.string.pref_key_help) -> run {
-                val session = Session(SupportUtils.HELP_URL, source = Session.Source.MENU)
+                val session = createTab(SupportUtils.HELP_URL, source = Session.Source.MENU)
                 activity.components.sessionManager.add(session, true)
                 activity.finish()
             }
@@ -69,7 +66,7 @@ class MozillaSettingsFragment : BaseSettingsFragment(),
                 else
                     SupportUtils.PRIVACY_NOTICE_URL
 
-                val session = Session(url, source = Session.Source.MENU)
+                val session = createTab(url, source = Session.Source.MENU)
                 activity.components.sessionManager.add(session, true)
                 activity.finish()
             }

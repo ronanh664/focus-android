@@ -8,10 +8,11 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.preference.PreferenceManager
+import mozilla.components.concept.engine.EngineSession
 import org.mozilla.focus.R
+import org.mozilla.focus.engine.EngineSharedPreferencesListener
 import org.mozilla.focus.fragment.FirstrunFragment
 import org.mozilla.focus.searchsuggestions.SearchSuggestionsPreferences
-import org.mozilla.focus.web.GeckoWebViewProvider
 
 /**
  * A simple wrapper for SharedPreferences that makes reading preference a little bit easier.
@@ -31,7 +32,32 @@ class Settings private constructor(context: Context) {
         }
     }
 
-    private val preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+    private val preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context).apply {
+        registerOnSharedPreferenceChangeListener(EngineSharedPreferencesListener(context))
+    }
+
+    fun createTrackingProtectionPolicy(): EngineSession.TrackingProtectionPolicy {
+        val trackingCategories: MutableList<EngineSession.TrackingProtectionPolicy.TrackingCategory> = mutableListOf()
+
+        if (shouldBlockSocialTrackers()) {
+            trackingCategories.add(EngineSession.TrackingProtectionPolicy.TrackingCategory.SOCIAL)
+        }
+        if (shouldBlockAdTrackers()) {
+            trackingCategories.add(EngineSession.TrackingProtectionPolicy.TrackingCategory.AD)
+        }
+        if (shouldBlockAnalyticTrackers()) {
+            trackingCategories.add(EngineSession.TrackingProtectionPolicy.TrackingCategory.ANALYTICS)
+        }
+        if (shouldBlockOtherTrackers()) {
+            trackingCategories.add(EngineSession.TrackingProtectionPolicy.TrackingCategory.CONTENT)
+        }
+
+        return EngineSession.TrackingProtectionPolicy.select(
+                cookiePolicy = EngineSession.TrackingProtectionPolicy.CookiePolicy.ACCEPT_NON_TRACKERS,
+                trackingCategories = trackingCategories.toTypedArray()
+        )
+    }
+
     private val resources: Resources = context.resources
     val hasAddedToHomeScreen: Boolean
         get() = preferences.getBoolean(getPreferenceKey(R.string.has_added_to_home_screen), false)
@@ -102,9 +128,6 @@ class Settings private constructor(context: Context) {
 
     fun shouldShowFirstrun(): Boolean =
             !preferences.getBoolean(FirstrunFragment.FIRSTRUN_PREF, false)
-
-    fun isFirstGeckoRun(): Boolean =
-            preferences.getBoolean(GeckoWebViewProvider.PREF_FIRST_GECKO_RUN, true)
 
     fun shouldUseBiometrics(): Boolean =
             preferences.getBoolean(getPreferenceKey(R.string.pref_key_biometric), false)

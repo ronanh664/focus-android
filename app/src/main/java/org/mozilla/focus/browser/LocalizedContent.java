@@ -18,7 +18,6 @@ import org.mozilla.focus.locale.Locales;
 import org.mozilla.focus.utils.AppConstants;
 import org.mozilla.focus.utils.HtmlLoader;
 import org.mozilla.focus.utils.SupportUtils;
-import org.mozilla.focus.web.IWebView;
 import org.mozilla.geckoview.BuildConfig;
 
 import java.util.Map;
@@ -26,9 +25,11 @@ import java.util.Map;
 public class LocalizedContent {
     // We can't use "about:" because webview silently swallows about: pages, hence we use
     // a custom scheme.
+
     public static final String URL_ABOUT = "focus:about";
     public static final String URL_RIGHTS = "focus:rights";
 
+    /*
     public static boolean handleInternalContent(String url, IWebView webView, Context context) {
         if (URL_ABOUT.equals(url)) {
             loadAbout(webView, context);
@@ -43,7 +44,7 @@ public class LocalizedContent {
 
     /**
      * Load the content for focus:about
-     */
+     *
     private static void loadAbout(@NonNull final IWebView webView, Context context) {
         final Resources resources = Locales.getLocalizedResources(context);
 
@@ -78,7 +79,7 @@ public class LocalizedContent {
 
     /**
      * Load the content for focus:rights
-     */
+     *
     private static void loadRights(@NonNull final IWebView webView, Context context) {
         final Resources resources = Locales.getLocalizedResources(context);
 
@@ -126,4 +127,5 @@ public class LocalizedContent {
 
         substitutionMap.put("%dir%", direction);
     }
+    */
 }

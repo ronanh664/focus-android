@@ -11,8 +11,6 @@ import android.widget.ProgressBar
 import mozilla.components.browser.session.Session
 
 import org.mozilla.focus.R
-import org.mozilla.focus.web.Download
-import org.mozilla.focus.web.IWebView
 
 class InfoFragment : WebFragment() {
     private var progressView: ProgressBar? = null
@@ -45,63 +43,6 @@ class InfoFragment : WebFragment() {
     }
 
     override fun onCreateViewCalled() {}
-
-    @Suppress("ComplexMethod")
-    override fun createCallback(): IWebView.Callback {
-        return object : IWebView.Callback {
-            override fun onPageStarted(url: String) {
-                progressView?.announceForAccessibility(getString(R.string.accessibility_announcement_loading))
-                progressView?.visibility = View.VISIBLE
-            }
-
-            override fun onPageFinished(isSecure: Boolean) {
-                progressView?.announceForAccessibility(getString(R.string.accessibility_announcement_loading_finished))
-                progressView?.visibility = View.INVISIBLE
-                if (webView?.visibility != View.VISIBLE) {
-                    webView?.visibility = View.VISIBLE
-                }
-            }
-
-            override fun onSecurityChanged(
-                isSecure: Boolean,
-                host: String?,
-                organization: String?
-            ) {
-            }
-
-            override fun onProgress(progress: Int) {
-                progressView?.progress = progress
-            }
-
-            override fun onDownloadStart(download: Download) {}
-
-            override fun onLongPress(hitTarget: IWebView.HitTarget) {}
-
-            override fun onURLChanged(url: String) {}
-
-            override fun onTitleChanged(title: String) {}
-
-            override fun onRequest(isTriggeredByUserGesture: Boolean) {}
-
-            override fun onEnterFullScreen(callback: IWebView.FullscreenCallback, view: View?) {}
-
-            override fun onExitFullScreen() {}
-
-            override fun countBlockedTracker() {}
-
-            override fun resetBlockedTrackers() {}
-
-            override fun onBlockingStateChanged(isBlockingEnabled: Boolean) {}
-
-            override fun onHttpAuthRequest(
-                callback: IWebView.HttpAuthCallback,
-                host: String,
-                realm: String
-            ) {}
-
-            override fun onRequestDesktopStateChanged(shouldRequestDesktop: Boolean) {}
-        }
-    }
 
     companion object {
         private const val ARGUMENT_URL = "url"
